@@ -4,9 +4,8 @@ name: Archive
 
 # Controls when the workflow will run
 on:
-  push:
-    branches:
-    - main
+  schedule:
+    - cron: 0 0 * * FRI
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -21,6 +20,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
 
+      # BEGIN configuration of source repos
       # Copy this step to checkout all individual repos to ./src/reponame
       # you should change the 'name', 'repository' and 'path'
       # also check the `ref` for the correct branch
@@ -39,6 +39,8 @@ jobs:
           ref: refs/heads/main
           token: ${{ secrets.USER_PAT }}
           path: ./repos/world-direct/suss
+
+      # BEGIN configuration of source repos
 
       - name: Checkout destination repo
         uses: actions/checkout@v4
