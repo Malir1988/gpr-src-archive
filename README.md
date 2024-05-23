@@ -1,4 +1,4 @@
-# gpg-src-archive
+# gpr-src-archive
 
 This is a sample repository which is used to transfer an encrypted archive containing multiple GitHub repostitories to another repository.
 We use this for cooperations where one contractor has a contracted privilege to gain source access, governed by an external party (Notar).
