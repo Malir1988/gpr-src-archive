@@ -59,7 +59,7 @@ jobs:
         env:
           GPG_PUBLIC_KEY : ${{ secrets.GPG_PUBLIC_KEY }}
           GPG_EMAIL: ${{ secrets.GPG_EMAIL }}
-        run: gpg --output ./src.tar.gz.enc --encrypt --recipient GPG_EMAIL ./src.tar.gz
+        run: gpg --output ./src.tar.gz.enc --encrypt --recipient $GPG_EMAIL ./src.tar.gz
 
       - name: test
         run: ls .
