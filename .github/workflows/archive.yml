@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Archive
 
 # Controls when the workflow will run
 on:
@@ -20,28 +20,46 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: test gpg
-        run: gpg --version
+      # Copy this step to checkout all individual repos to ./repos/name
+      # you should change the 'name', 'repository' and 'path'
+      # also check the `ref` for the correct branch
+      - name: Checkout source repo world-direct/technology
+        uses: actions/checkout@v4.1.5
+        with:
+          repository: world-direct/technology
+          ref: refs/heads/main
+          token: ${{ secrets.USER_PAT }}
+          path: ./repos/world-direct/technology
 
-      - name: import key
+      - name: Checkout source repo world-direct/suss
+        uses: actions/checkout@v4.1.5
+        with:
+          repository: world-direct/suss
+          ref: refs/heads/main
+          token: ${{ secrets.USER_PAT }}
+          path: ./repos/world-direct/suss
+
+              
+      # Checks-out your repository under $GITHUB_WORKSPACE (./)
+      - name: Checkout this repo
+        uses: actions/checkout@v4
+
+      - name: Create source archive, output file list to src.lst
+        run: tar -czvf src.tar.gz . | tee src.lst
+        
+      - name: Import GPG key
         env:
           GPG_PUBLIC_KEY : ${{ secrets.GPG_PUBLIC_KEY }}
           GPG_EMAIL: ${{ secrets.GPG_EMAIL }}
         run: echo -e "$GPG_PUBLIC_KEY" | gpg --import
 
-      - name: Checkout source repo
-        uses: actions/checkout@v4.1.5
-        with:
-          # Repository name with owner. For example, actions/checkout
-          repository: world-direct/technology
-          ref: refs/heads/main
-          token: ${{ secrets.USER_PAT }}
-          path: ./src/world-direct/technology
-                
-      - name: test src
-        run: ls ./src/world-direct/technology
         
+      - name: Encrypt src.tar.gz to src.tar.gz.enc
+        env:
+          GPG_PUBLIC_KEY : ${{ secrets.GPG_PUBLIC_KEY }}
+          GPG_EMAIL: ${{ secrets.GPG_EMAIL }}
+        run: gpg --output ./src.tar.gz.enc --encrypt --recipient GPG_EMAIL ./src.tar.gz
+
+      - name: test
+        run: ls .
