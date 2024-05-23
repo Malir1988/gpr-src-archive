@@ -39,8 +39,9 @@ jobs:
           # Repository name with owner. For example, actions/checkout
           repository: world-direct/technology
           ref: refs/heads/main
-          # token: # optional, default is ${{ github.token }}
-          path: ./src/technology
-          # Whether to execute `git clean -ffdx && git reset --hard HEAD` before fetching
-      
+          token: ${{ secrets.USER_PAT }}
+          path: ./src/world-direct/technology
                 
+      - name: test src
+        run: ls ./src/world-direct/technology
+        
