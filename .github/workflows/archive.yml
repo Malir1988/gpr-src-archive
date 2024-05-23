@@ -56,7 +56,6 @@ jobs:
           GPG_EMAIL: ${{ secrets.GPG_EMAIL }}
         run: echo -e "$GPG_PUBLIC_KEY" | gpg --import
 
-        
       - name: Encrypt src.tar.gz to src.tar.gz.enc
         env:
           GPG_PUBLIC_KEY : ${{ secrets.GPG_PUBLIC_KEY }}
