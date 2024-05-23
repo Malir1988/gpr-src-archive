@@ -48,7 +48,7 @@ jobs:
           path: ./dest
 
       - name: Create source archive, output file list to src.lst
-        run: tar -czvf src.tar.gz ./repos | tee src.lst
+        run: tar -czvf src.tar.gz ./repos > src.lst
         
       - name: Import GPG key
         env:
@@ -62,5 +62,12 @@ jobs:
           GPG_EMAIL: ${{ secrets.GPG_EMAIL }}
         run: gpg --output ./src.tar.gz.enc --encrypt --recipient $GPG_EMAIL --trust-model always ./src.tar.gz
 
-      - name: test
-        run: ls . && ls ./dest
+      - name: Copy encrpyted archive and source list to dest
+        run: cp ./src.tar.gz.enc ./dest/src.tar.gz.enc && ./src.lst ./dest/src.lst
+
+      - name: Commit destination change
+        run: |
+          cd ./dest
+          git add .
+          git commit -m"Source archive $(date)"
+          git push
