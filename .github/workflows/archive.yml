@@ -21,7 +21,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
 
-      # Copy this step to checkout all individual repos to ./repos/name
+      # Copy this step to checkout all individual repos to ./src/reponame
       # you should change the 'name', 'repository' and 'path'
       # also check the `ref` for the correct branch
       - name: Checkout source repo world-direct/technology
@@ -40,13 +40,15 @@ jobs:
           token: ${{ secrets.USER_PAT }}
           path: ./repos/world-direct/suss
 
-              
-      # Checks-out your repository under $GITHUB_WORKSPACE (./)
-      - name: Checkout this repo
+      - name: Checkout destination repo
         uses: actions/checkout@v4
+        with:
+          repository: ${{ secrets.DESTINATION_REPO }}
+          ssh-key: ${{ secrets.DESTINATION_REPO_SSH_KEY }}
+          path: ./dest
 
       - name: Create source archive, output file list to src.lst
-        run: tar -czvf src.tar.gz . | tee src.lst
+        run: tar -czvf src.tar.gz ./repos | tee src.lst
         
       - name: Import GPG key
         env:
@@ -62,4 +64,4 @@ jobs:
         run: gpg --output ./src.tar.gz.enc --encrypt --recipient $GPG_EMAIL --trust-model always ./src.tar.gz
 
       - name: test
-        run: ls .
+        run: ls . && ls ./dest
