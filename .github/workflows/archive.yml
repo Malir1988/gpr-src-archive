@@ -63,7 +63,7 @@ jobs:
         run: gpg --output ./src.tar.gz.enc --encrypt --recipient $GPG_EMAIL --trust-model always ./src.tar.gz
 
       - name: Copy encrpyted archive and source list to dest
-        run: cp ./src.tar.gz.enc ./dest/src.tar.gz.enc && ./src.lst ./dest/src.lst
+        run: cp ./src.tar.gz.enc ./dest/src.tar.gz.enc && cp ./src.lst ./dest/src.lst
 
       - name: Commit destination change
         run: |
