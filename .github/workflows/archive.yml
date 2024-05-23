@@ -68,6 +68,10 @@ jobs:
       - name: Commit destination change
         run: |
           cd ./dest
+
+          git config user.email "archiver@robot"
+          git config user.name "archiver"
+          
           git add .
           git commit -m"Source archive $(date)"
           git push
